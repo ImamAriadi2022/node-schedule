@@ -11,6 +11,8 @@ const faqData = [
   { question: "Bagaimana cara menggunakan FAQ?", answer: "Gunakan bagian FAQ untuk mendapatkan jawaban atas pertanyaan umum melalui chatbot." }
 ];
 
+const greetings = ["halo", "hai", "selamat pagi", "selamat siang", "selamat sore", "selamat malam"];
+
 function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
@@ -26,8 +28,10 @@ function Chatbot() {
 
   const handleQuerySubmit = (e) => {
     e.preventDefault();
-    const faq = faqData.find(faq => faq.question.toLowerCase().includes(query.toLowerCase()));
-    const response = faq ? faq.answer : "Maaf, pertanyaan Anda tidak ditemukan.";
+    const lowerCaseQuery = query.toLowerCase();
+    const isGreeting = greetings.some(greeting => lowerCaseQuery.includes(greeting));
+    const faq = faqData.find(faq => faq.question.toLowerCase().includes(lowerCaseQuery));
+    const response = isGreeting ? "Apa ada yang bisa saya bantu?" : (faq ? faq.answer : "Maaf, pertanyaan Anda tidak ditemukan.");
     setMessages([...messages, { type: 'user', text: query }, { type: 'bot', text: response }]);
     setQuery('');
   };
