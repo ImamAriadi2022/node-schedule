@@ -1,19 +1,32 @@
 import React from 'react';
+import { Container, Row, Col, Card } from 'react-bootstrap';
 
-const Cara = () => {
+function Cara() {
+  const steps = [
+    "Daftar akun sebagai siswa, guru, atau admin.",
+    "Login ke akun Anda menggunakan kredensial Anda.",
+    "Admin dapat melihat semua aktivitas siswa dan guru.",
+    "Guru dapat membuat dan mengelola jadwal untuk kelas mereka.",
+    "Siswa dapat melihat jadwal mereka dan menandai kehadiran mereka.",
+    "Gunakan bagian FAQ untuk mendapatkan jawaban atas pertanyaan umum melalui chatbot."
+  ];
+
   return (
-    <section>
-      <h2>Cara Kerja</h2>
-      <ol>
-        <li>Daftar akun sebagai siswa, guru, atau admin.</li>
-        <li>Login ke akun Anda menggunakan kredensial Anda.</li>
-        <li>Admin dapat melihat semua aktivitas siswa dan guru.</li>
-        <li>Guru dapat membuat dan mengelola jadwal untuk kelas mereka.</li>
-        <li>Siswa dapat melihat jadwal mereka dan menandai kehadiran mereka.</li>
-        <li>Gunakan bagian FAQ untuk mendapatkan jawaban atas pertanyaan umum melalui chatbot.</li>
-      </ol>
-    </section>
+    <Container fluid className="p-5 bg-light">
+      <Row className="justify-content-center">
+        <Col md={8}>
+          <h2 className="text-success text-center mb-4">Cara Kerja</h2>
+          {steps.map((step, index) => (
+            <Card className="mb-3 shadow-sm" key={index}>
+              <Card.Body>
+                <Card.Text>{index + 1}. {step}</Card.Text>
+              </Card.Body>
+            </Card>
+          ))}
+        </Col>
+      </Row>
+    </Container>
   );
-};
+}
 
 export default Cara;

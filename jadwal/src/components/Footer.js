@@ -1,11 +1,18 @@
 import React from 'react';
 
-const Footer = () => {
+function Footer() {
   return (
-    <footer>
+    <footer style={{ 
+      backgroundColor: '#228B22', 
+      color: 'white', 
+      textAlign: 'center', 
+      padding: '10px 0', 
+      width: '100%', 
+      bottom: '0' 
+    }}>
       <p>&copy; 2025 Schedule Website. All rights reserved.</p>
     </footer>
   );
-};
+}
 
 export default Footer;
