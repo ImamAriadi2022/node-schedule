@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, ListGroup, Form, InputGroup, Alert } from 'react-bootstrap';
 import axios from 'axios';
+import './SiswaDashboard.css'; // Import file CSS
 
 function SiswaDashboard() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -11,27 +12,55 @@ function SiswaDashboard() {
     const fetchGuruData = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/users/guru');
-        setGuruData(response.data);
+        const guruDataWithJadwal = await Promise.all(response.data.map(async (guru) => {
+          const jadwalResponse = await axios.get(`http://localhost:5000/api/schedules?guruId=${guru.id}`);
+          return { ...guru, jadwal: jadwalResponse.data || [] };
+        }));
+        setGuruData(guruDataWithJadwal);
       } catch (error) {
         console.error('Error fetching guru data:', error);
       }
     };
 
+    const fetchSelectedGurus = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/selected-gurus');
+        const selectedGurusWithJadwal = await Promise.all(response.data.map(async (guru) => {
+          const jadwalResponse = await axios.get(`http://localhost:5000/api/schedules?guruId=${guru.guruId}`);
+          return { ...guru, jadwal: jadwalResponse.data || [] };
+        }));
+        setSelectedGurus(selectedGurusWithJadwal);
+      } catch (error) {
+        console.error('Error fetching selected gurus:', error);
+      }
+    };
+
     fetchGuruData();
+    fetchSelectedGurus();
   }, []);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
 
-  const handleSelectGuru = (guru) => {
-    if (!selectedGurus.includes(guru)) {
-      setSelectedGurus([...selectedGurus, guru]);
+  const handleSelectGuru = async (guru) => {
+    if (!selectedGurus.some(selectedGuru => selectedGuru.id === guru.id)) {
+      try {
+        await axios.post('http://localhost:5000/api/selected-gurus', { guruId: guru.id });
+        setSelectedGurus([...selectedGurus, guru]);
+      } catch (error) {
+        console.error('Error selecting guru:', error);
+      }
     }
   };
 
-  const handleDeselectGuru = (guru) => {
-    setSelectedGurus(selectedGurus.filter(selectedGuru => selectedGuru !== guru));
+  const handleDeselectGuru = async (guru) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/selected-gurus/${guru.id}`);
+      setSelectedGurus(selectedGurus.filter(selectedGuru => selectedGuru.id !== guru.id));
+    } catch (error) {
+      console.error('Error deselecting guru:', error);
+    }
   };
 
   const filteredGuru = guruData.filter(guru =>
@@ -39,7 +68,7 @@ function SiswaDashboard() {
   );
 
   return (
-    <Container fluid className="p-5 bg-light">
+    <Container fluid className="p-5 bg-light full-height">
       <Row className="justify-content-center">
         <Col md={8}>
           <h2 className="text-success mb-4">Dashboard Siswa</h2>
@@ -79,7 +108,7 @@ function SiswaDashboard() {
                     <Card.Title>Jadwal Kelas {guru.nama}</Card.Title>
                     <ListGroup>
                       {guru.jadwal.map((jadwal, index) => (
-                        <ListGroup.Item key={index}>{jadwal}</ListGroup.Item>
+                        <ListGroup.Item key={index}>{jadwal.hari} - {jadwal.waktu} - {jadwal.mataPelajaran}</ListGroup.Item>
                       ))}
                     </ListGroup>
                     <Button variant="danger" className="mt-3" onClick={() => handleDeselectGuru(guru)}>Hapus Guru</Button>

@@ -22,3 +22,10 @@ CREATE TABLE IF NOT EXISTS schedules (
   guruId INT,
   FOREIGN KEY (guruId) REFERENCES users(id)
 );
+
+
+CREATE TABLE IF NOT EXISTS selected_gurus (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  guruId INT,
+  FOREIGN KEY (guruId) REFERENCES users(id)
+);

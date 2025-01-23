@@ -85,15 +85,23 @@ app.post('/api/schedules', (req, res) => {
 });
 
 app.get('/api/schedules', (req, res) => {
-  const query = `
+  const { guruId } = req.query;
+  let query = `
     SELECT schedules.*, users.nama AS guruNama, users.mataPelajaran AS guruMataPelajaran
     FROM schedules
     JOIN users ON schedules.guruId = users.id
   `;
-  db.query(query, (err, results) => {
+  const queryParams = [];
+  if (guruId) {
+    query += ' WHERE schedules.guruId = ?';
+    queryParams.push(guruId);
+  }
+  db.query(query, queryParams, (err, results) => {
     if (err) {
+      console.error('Error fetching schedules:', err);
       return res.status(500).send(err);
     }
+    console.log('Schedules:', results); // Tambahkan logging di sini
     res.send(results);
   });
 });
@@ -106,6 +114,43 @@ app.delete('/api/schedules/:id', (req, res) => {
       return res.status(500).send(err);
     }
     res.send({ message: 'Jadwal berhasil dihapus' });
+  });
+});
+
+// New routes for selected gurus
+app.post('/api/selected-gurus', (req, res) => {
+  const { guruId } = req.body;
+  const query = 'INSERT INTO selected_gurus (guruId) VALUES (?)';
+  db.query(query, [guruId], (err, result) => {
+    if (err) {
+      return res.status(400).send(err);
+    }
+    res.status(201).send({ id: result.insertId, guruId });
+  });
+});
+
+app.get('/api/selected-gurus', (req, res) => {
+  const query = `
+    SELECT selected_gurus.*, users.nama AS guruNama, users.mataPelajaran AS guruMataPelajaran
+    FROM selected_gurus
+    JOIN users ON selected_gurus.guruId = users.id
+  `;
+  db.query(query, (err, results) => {
+    if (err) {
+      return res.status(500).send(err);
+    }
+    res.send(results);
+  });
+});
+
+app.delete('/api/selected-gurus/:id', (req, res) => {
+  const { id } = req.params;
+  const query = 'DELETE FROM selected_gurus WHERE id = ?';
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      return res.status(500).send(err);
+    }
+    res.send({ message: 'Guru berhasil dihapus dari pilihan' });
   });
 });
 

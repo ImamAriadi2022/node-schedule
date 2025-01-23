@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button, Form, InputGroup, Card } from 'react-bootstrap';
 import { FaQuestion } from 'react-icons/fa';
 
@@ -17,6 +17,7 @@ function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [messages, setMessages] = useState([]);
+  const messagesEndRef = useRef(null);
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
@@ -35,6 +36,17 @@ function Chatbot() {
     setMessages([...messages, { type: 'user', text: query }, { type: 'bot', text: response }]);
     setQuery('');
   };
+
+  const handleHintClick = (question) => {
+    setQuery(question);
+    handleQuerySubmit({ preventDefault: () => {} });
+  };
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
 
   return (
     <div>
@@ -60,6 +72,16 @@ function Chatbot() {
         <Card style={{ position: 'fixed', bottom: '100px', right: '20px', width: '300px', zIndex: 1000 }}>
           <Card.Body>
             <Card.Title>FAQ Chatbot</Card.Title>
+            <div style={{ marginBottom: '10px' }}>
+              <strong>Contoh pertanyaan:</strong>
+              <ul>
+                {faqData.map((faq, index) => (
+                  <li key={index} style={{ cursor: 'pointer', color: 'blue' }} onClick={() => handleHintClick(faq.question)}>
+                    {faq.question}
+                  </li>
+                ))}
+              </ul>
+            </div>
             <div style={{ maxHeight: '200px', overflowY: 'auto', marginBottom: '10px' }}>
               {messages.map((msg, index) => (
                 <div key={index} style={{ textAlign: msg.type === 'user' ? 'right' : 'left' }}>
@@ -76,6 +98,7 @@ function Chatbot() {
                   </div>
                 </div>
               ))}
+              <div ref={messagesEndRef} />
             </div>
             <Form onSubmit={handleQuerySubmit}>
               <InputGroup>
