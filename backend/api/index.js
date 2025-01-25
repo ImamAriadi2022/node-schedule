@@ -27,6 +27,16 @@ db.connect(err => {
 });
 
 // Routes
+app.get('/', (req, res) => {
+  db.query('SELECT 1', (err, results) => {
+    if (err) {
+      console.error('SQL Error:', err);
+      return res.status(500).send('SQL Error: ' + err.message);
+    }
+    res.send('SQL Connection Successful');
+  });
+});
+
 app.post('/users/register', (req, res) => {
   const { nama, email, password, role, mataPelajaran, asalSekolah, kelas } = req.body;
   console.log(req.body); // Tambahkan logging di sini
