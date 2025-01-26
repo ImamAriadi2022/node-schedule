@@ -22,7 +22,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/users/login', formData);
+      const response = await axios.post('https://node-schedule-sigma.vercel.app/users/login', formData);
       setMessage('Login berhasil!');
       console.log(response.data);
       const { role } = response.data;

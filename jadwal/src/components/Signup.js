@@ -40,7 +40,7 @@ function Signup() {
     e.preventDefault();
     console.log(formData); // Tambahkan logging di sini
     try {
-      const response = await axios.post('http://localhost:5000/api/users/register', formData);
+      const response = await axios.post('https://node-schedule-sigma.vercel.app/users/register', formData);
       setMessage('Pendaftaran berhasil!');
       console.log(response.data);
     } catch (error) {

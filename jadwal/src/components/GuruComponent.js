@@ -9,7 +9,7 @@ function GuruComponent() {
   useEffect(() => {
     const fetchGuruData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/users/guru');
+        const response = await axios.get('https://node-schedule-sigma.vercel.app/users/guru');
         setGuruData(response.data);
       } catch (error) {
         console.error('Error fetching guru data:', error);

@@ -9,7 +9,7 @@ function SiswaComponent() {
   useEffect(() => {
     const fetchSiswaData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/users/siswa');
+        const response = await axios.get('https://node-schedule-sigma.vercel.app/users/siswa');
         setSiswaData(response.data);
       } catch (error) {
         console.error('Error fetching siswa data:', error);

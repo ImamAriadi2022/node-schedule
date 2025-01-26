@@ -9,11 +9,11 @@ function KegiatanSiswa() {
   useEffect(() => {
     const fetchKegiatanData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/selected-gurus');
+        const response = await axios.get('https://node-schedule-sigma.vercel.app/selected-gurus');
         const selectedGurus = response.data;
         console.log('Selected Gurus:', selectedGurus); // Tambahkan logging di sini
         const kegiatanPromises = selectedGurus.map(async (guru) => {
-          const jadwalResponse = await axios.get(`http://localhost:5000/api/schedules?guruId=${guru.guruId}`);
+          const jadwalResponse = await axios.get(`https://node-schedule-sigma.vercel.app/schedules?guruId=${guru.guruId}`);
           console.log(`Jadwal for Guru ${guru.guruNama}:`, jadwalResponse.data); // Tambahkan logging di sini
           return jadwalResponse.data.map(jadwal => ({
             ...jadwal,

@@ -11,9 +11,9 @@ function SiswaDashboard() {
   useEffect(() => {
     const fetchGuruData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/users/guru');
+        const response = await axios.get('https://node-schedule-sigma.vercel.app/users/guru');
         const guruDataWithJadwal = await Promise.all(response.data.map(async (guru) => {
-          const jadwalResponse = await axios.get(`http://localhost:5000/api/schedules?guruId=${guru.id}`);
+          const jadwalResponse = await axios.get(`https://node-schedule-sigma.vercel.app/schedules?guruId=${guru.id}`);
           return { ...guru, jadwal: jadwalResponse.data || [] };
         }));
         setGuruData(guruDataWithJadwal);
@@ -24,9 +24,9 @@ function SiswaDashboard() {
 
     const fetchSelectedGurus = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/selected-gurus');
+        const response = await axios.get('https://node-schedule-sigma.vercel.app/selected-gurus');
         const selectedGurusWithJadwal = await Promise.all(response.data.map(async (guru) => {
-          const jadwalResponse = await axios.get(`http://localhost:5000/api/schedules?guruId=${guru.guruId}`);
+          const jadwalResponse = await axios.get(`https://node-schedule-sigma.vercel.app/schedules?guruId=${guru.guruId}`);
           return { ...guru, jadwal: jadwalResponse.data || [] };
         }));
         setSelectedGurus(selectedGurusWithJadwal);
@@ -46,7 +46,7 @@ function SiswaDashboard() {
   const handleSelectGuru = async (guru) => {
     if (!selectedGurus.some(selectedGuru => selectedGuru.id === guru.id)) {
       try {
-        await axios.post('http://localhost:5000/api/selected-gurus', { guruId: guru.id });
+        await axios.post('https://node-schedule-sigma.vercel.app/selected-gurus', { guruId: guru.id });
         setSelectedGurus([...selectedGurus, guru]);
       } catch (error) {
         console.error('Error selecting guru:', error);
@@ -56,7 +56,7 @@ function SiswaDashboard() {
 
   const handleDeselectGuru = async (guru) => {
     try {
-      await axios.delete(`http://localhost:5000/api/selected-gurus/${guru.id}`);
+      await axios.delete(`https://node-schedule-sigma.vercel.app/selected-gurus/${guru.id}`);
       setSelectedGurus(selectedGurus.filter(selectedGuru => selectedGuru.id !== guru.id));
     } catch (error) {
       console.error('Error deselecting guru:', error);
