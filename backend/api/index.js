@@ -12,10 +12,10 @@ app.use(bodyParser.json());
 
 // MySQL connection
 const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '', // Ganti dengan password MySQL Anda
-  database: 'schedule'
+  host: 'blhngqbdkdw1g8uw5smk-mysql.services.clever-cloud.com',
+  user: 'uxziwf81c9wj4f9q',
+  password: 'TK5mTKIQP5xqDRYUjo5t', // Ganti dengan password MySQL Anda
+  database: 'blhngqbdkdw1g8uw5smk'
 });
 
 db.connect(err => {
